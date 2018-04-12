@@ -1,0 +1,44 @@
+html, body { 
+    height: 100%;
+    margin:0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.header {
+    height: 15%;
+    width: 100%;
+    background-color:#96A5A8;
+}
+
+.header_row {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    justify-content: space-between;
+    align-items: center;
+    margin-left:50px; 
+    margin-right: 50px; 
+}
+
+.header_box {
+    height: 100%;
+    background-color: #4B5254;
+    width: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #E6E2DD;
+    font-size:30px;
+
+}
+
+.Login {
+    height: 30%;
+    width: 120px;
+    background-color: #98CEF8;
+    border:none;
+}
+
+.profile_icon {
+    height: 65%;
+}
