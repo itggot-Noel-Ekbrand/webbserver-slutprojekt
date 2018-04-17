@@ -4,6 +4,33 @@ html, body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+
+.container {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    height: 100vh;
+    width:100vw;
+}
+
+
+.login_popup {
+    position: fixed;
+    top: 200px;
+    left: calc(50vw - 250px);
+    height: 400px;
+    width:500px;
+    background-color: slategrey;
+}
+.register_popup {
+    position: fixed;
+    top: 200px;
+    left: calc(50vw - 250px);
+    height: 400px;
+    width:500px;
+    background-color: slategrey;
+}
+
 .header {
     height: 15%;
     width: 100%;
