@@ -13,6 +13,51 @@ html, body {
     width:100vw;
 }
 
+#post {
+    margin-top: 5vh;
+    margin-left: 5vh;
+    width: 95vw;
+    height: 10vh; 
+    border:solid 1px black;
+    border-bottom: none;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.post {
+    margin-left: 5vh;
+    width: 95vw;
+    height: 10vh;
+    border:solid 1px black;
+    border-bottom: none;
+}
+
+#postend{
+    margin-left: 5vh;
+    width: 95vw;
+    height: 10vh;
+    border:solid 1px black;
+}
+
+
+.post_popup {
+    position: fixed;
+    top: 200px;
+    left: calc(50vw - 250px);
+    height: 400px;
+    width:500px;
+    background-color: slategrey;
+}
+
+.display_none {
+    display:none;
+}
+
+.display {
+    display:block;
+}
+
 
 .login_popup {
     position: fixed;
@@ -21,6 +66,7 @@ html, body {
     height: 400px;
     width:500px;
     background-color: slategrey;
+    z-index: 10;
 }
 .register_popup {
     position: fixed;
@@ -60,8 +106,15 @@ html, body {
 }
 
 .Login {
-    height: 30%;
-    width: 120px;
+    height: 5vh;
+    width: 8vw;
+    background-color: #98CEF8;
+    border:none;
+}
+
+.Create {
+    height: 5vh;
+    width: 8vw;
     background-color: #98CEF8;
     border:none;
 }

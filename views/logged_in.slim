@@ -1,0 +1,16 @@
+div class="container"
+        div class="header"
+            div class="header_row"
+                img src="/img/account-circle.svg" class="profile_icon"
+                div class="header_box"
+                    p NTI Johanneberg
+                button class="Create" Make a post
+                form action="/logout" method="POST" 
+                    input.Login type="submit" value="Logout"
+        - title.each_line do |y|
+            div.post
+                p = y + " "      
+        - info.each_line do |x|
+            div.post
+                p = x + " "
+                

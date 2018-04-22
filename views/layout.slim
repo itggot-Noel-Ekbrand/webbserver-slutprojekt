@@ -5,38 +5,29 @@ html lang="en"
         meta name="viewport" content="width=device-width, initial-scale=1.0"/
         meta http-equiv="X-UA-Compatible" content="ie=edge"/
         link href="/css/main.css" rel="stylesheet"
-        
         title Document
     body
-        yield
-    div class="container"
-        div class="header"
-            div class="header_row"
-                img src="/img/account-circle.svg" class="profile_icon"
-                div class="header_box"
-                    p NTI Johanneberg
-                button class="Login" Login
-        div class="login_popup"
-            form action="/login" method="POST"
-                input type="text" name="username" placeholder="Username"
-                input type="password" name="password" placholder="Password"
-                input type="submit" value="Login"
-            button class="Register" Register
-        div class="register_popup"
-            form action="/register" method="POST"
-                input type="text" name="username" placeholder="Username"
-                input type="password" name="password" placholder="Password"
-                input type="submit" value="Register"
+        ==yield
         script src="js/jquery-3.3.1.min.js"
         javascript:
             $(document).ready(function(){
-                $(".login_popup").hide()
-                $(".register_popup").hide()
-            })
+                $(".login_popup").hide();
+                $(".register_popup").hide();
+                $(".post_popup").hide();
+            });
             $(".Login").click(function(){
-                $(".login_popup").fadeToggle(200)
-                })
+                $(".login_popup").fadeToggle(10);
+                console.log("hello");
+                });
+            $(".logged").click(function(){
+                $(".post_popup").fadeToggle(10);
+                });
             $(".Register").click(function(){
-                $(".register_popup").fadeToggle(200)
-                })
-  
+                $(".register_popup").fadeToggle(10);
+                }); 
+            $(".Create").click(function(){
+                $(".post_popup").fadeToggle(10);
+                console.log("hello");
+                });
+            
+     

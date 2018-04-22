@@ -49,17 +49,19 @@ require 'uri'
 		username = session[:user]
 		p username
 		userid = dbcooper.execute("SELECT id FROM users WHERE username 	= '#{username}'").join
-		info = dbcooper.execute("SELECT info FROM list WHERE userid = '#{userid}'")
-		info_id = dbcooper.execute("SELECT id FROM list WHERE userid = '#{userid}'")
-		slim(:to, locals:{ info:info, info_id:info_id})
+		info = dbcooper.execute("SELECT text FROM list WHERE userid = '#{userid}'").join
+		title = dbcooper.execute("SELECT title FROM list WHERE userid = '#{userid}'").join
+		info_id = dbcooper.execute("SELECT id FROM list WHERE userid = '#{userid}'").join
+		slim(:logged_in, locals:{ info:info, info_id:info_id, title:title})
 	end
 
 	post('/create') do
 		username = session[:user]
-		newinfo = params["newinfo"]
+		title = params["title"]
+		text = params["text"]
 		dbcooper = SQLite3::Database.new("db/forum.sqlite")
 		userid = dbcooper.execute("SELECT id FROM users WHERE username = '#{username}'").join
-		dbcooper.execute("INSERT INTO list ('info', 'userid') VALUES (?,?)", [newinfo, userid])
+		dbcooper.execute("INSERT INTO list ('title', 'text', 'userid') VALUES (?,?,?)", [title, text, userid])
 		redirect('/logged_in/')
 	end
 
