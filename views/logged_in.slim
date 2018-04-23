@@ -4,13 +4,21 @@ div class="container"
                 img src="/img/account-circle.svg" class="profile_icon"
                 div class="header_box"
                     p NTI Johanneberg
-                button class="Create" Make a post
+                button class="create" Make a post
                 form action="/logout" method="POST" 
                     input.Login type="submit" value="Logout"
-        - title.each_line do |y|
+                div class="post_popup"
+                    form action="/create" method="POST"
+                        input type="text" name="title" placeholder="Title"
+                        input type="text" name="text" placeholder="Text"
+                        input type="submit" value="Submit"
+        - title.each_with_index do |y|
             div.post
-                p = y + " "      
-        - info.each_line do |x|
-            div.post
-                p = x + " "
+                a.link href="/logged_in/#{y[0]}" = y[0]
+        div id="postend"
+            - x = title.size
+            a.link = title[x]
+
+           
+script src="../js/jquery-3.3.1.min.js"
                 

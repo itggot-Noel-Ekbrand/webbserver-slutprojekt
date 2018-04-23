@@ -33,6 +33,16 @@ html, body {
     border-bottom: none;
 }
 
+.reposti {
+    width: 1024px;
+    height: 436px;
+    align-self: center;
+}
+
+.link {
+    margin-left: 20px;
+}
+
 #postend{
     margin-left: 5vh;
     width: 95vw;
@@ -81,6 +91,7 @@ html, body {
     height: 15%;
     width: 100%;
     background-color:#96A5A8;
+    margin-bottom: 20px;
 }
 
 .header_row {
@@ -112,7 +123,7 @@ html, body {
     border:none;
 }
 
-.Create {
+.create {
     height: 5vh;
     width: 8vw;
     background-color: #98CEF8;
