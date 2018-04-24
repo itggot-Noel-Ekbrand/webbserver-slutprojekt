@@ -8,6 +8,7 @@ html lang="en"
         title Document
     body
         ==yield
+<<<<<<< HEAD
     div class="container"
         div class="header"
             div class="header_row"
@@ -26,16 +27,27 @@ html lang="en"
                 input type="text" name="username" placeholder="Username"
                 input type="password" name="password" placholder="Password"
                 input type="submit" value="Register"
+=======
+>>>>>>> ebe1c4ca31efd6609d01ecf1619efe961d3413cd
         script src="js/jquery-3.3.1.min.js"
         javascript:
             $(document).ready(function(){
-                $(".login_popup").hide()
-                $(".register_popup").hide()
-            })
+                $(".login_popup").hide();
+                $(".register_popup").hide();
+                $(".post_popup").hide();
+            });
             $(".Login").click(function(){
-                $(".login_popup").fadeToggle(200)
-                })
+                $(".login_popup").fadeToggle(10);
+                });
+            $(".logged").click(function(){
+                $(".post_popup").fadeToggle(10);
+                });
             $(".Register").click(function(){
-                $(".register_popup").fadeToggle(200)
-                })
-  
+                $(".register_popup").fadeToggle(10);
+                $(".login_popup").hide();
+                }); 
+            $(".create").click(function(){
+                $(".post_popup").fadeToggle(10);
+                });
+            
+     
