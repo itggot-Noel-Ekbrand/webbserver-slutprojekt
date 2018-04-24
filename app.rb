@@ -5,6 +5,9 @@ require 'open-uri'
 require 'json'
 require 'addressable'
 require 'uri'
+require 'sqlite3'
+require 'bcrypt'
+require 'slim'
 
 	get ('/') do
 		slim(:index)
