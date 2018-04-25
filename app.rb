@@ -1,5 +1,4 @@
 require 'sinatra'
-class App < Sinatra::Base
 enable :sessions
 require 'open-uri'
 require 'json'
@@ -108,4 +107,4 @@ require 'slim'
 	end	
 
 
-end           
+         
