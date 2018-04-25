@@ -133,3 +133,54 @@ html, body {
 .profile_icon {
     height: 65%;
 }
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px;
+}
+
+.header_title {
+    text-decoration: none;
+    color: #E6E2DD;
+}
+
+.center{
+    align-self: center;
+}
+
+.posted {
+    height: 40vh;
+    width: 80vw;
+    border: 1px solid black;
+    align-self: center;
+}
+
+.text {
+    padding:20px;
+}
+
+.comments {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.comment_button {
+    height: 5vh;
+    width: 8vw;
+    background-color: #98CEF8;
+    border:none; 
+    align-self: center;
+}
+
+
+.comment_box {
+    width: 60vw;
+    height: 30vh;
+    padding:20px;
+    margin-top: 20px;
+    align-self: center;
+}
+

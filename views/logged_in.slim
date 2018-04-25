@@ -3,7 +3,7 @@ div class="container"
             div class="header_row"
                 img src="/img/account-circle.svg" class="profile_icon"
                 div class="header_box"
-                    p NTI Johanneberg
+                    a.header_title href="/" NTI Johanneberg
                 button class="create" Make a post
                 form action="/logout" method="POST" 
                     input.Login type="submit" value="Logout"
@@ -12,12 +12,12 @@ div class="container"
                         input type="text" name="title" placeholder="Title"
                         input type="text" name="text" placeholder="Text"
                         input type="submit" value="Submit"
-        - title.each_with_index do |y|
-            div.post
-                a.link href="/logged_in/#{y[0]}" = y[0]
-        div id="postend"
-            - x = title.size
-            a.link = title[x]
+        - list_all.each_with_index do |content|
+            .post
+                .title
+                    a href="/logged_in/#{content[1]}"
+                        h3 = content[1].capitalize
+                
 
            
 script src="../js/jquery-3.3.1.min.js"

@@ -34,7 +34,7 @@ require 'uri'
 		username = params["username"]
 		password = params["password"]
 		dbcooper = SQLite3::Database.new("db/forum.sqlite")
-		password_digest = dbcooper.execute("SELECT password FROM users WHERE username = '#{username}'")
+		password_digest = dbcooper.execute("SELECT password FROM users WHERE username = ?", username)
 		password_digest = BCrypt::Password.new(password_digest.join)
 		if password_digest == password
 			session[:user] = username
@@ -45,26 +45,25 @@ require 'uri'
 	end
 
 	get('/logged_in/') do
-		dbcooper = SQLite3::Database.new("db/forum.sqlite")
 		username = session[:user]
-		p username
-		userid = dbcooper.execute("SELECT id FROM users WHERE username 	= ?", username).join
-		info = dbcooper.execute("SELECT text FROM list WHERE userid = '#{userid}'").join
-		title = dbcooper.execute("SELECT title FROM list WHERE userid = '#{userid}'")
-		info_id = dbcooper.execute("SELECT id FROM list WHERE userid = '#{userid}'").join
+		dbcooper = SQLite3::Database.new("db/forum.sqlite")
+		list_all = dbcooper.execute("SELECT * FROM list")
+		users_all = dbcooper.execute("SELECT * FROM users")
+		title = dbcooper.execute("SELECT title FROM list").join
 		session[:title] = title
-		slim(:logged_in, locals:{ info:info, info_id:info_id, title:title})
+		slim(:logged_in, locals:{ list_all: list_all, user_all: users_all})
 	end
 
 	post('/create') do
 		username = session[:user]
-		title = params["title"]
+		if username == nil
+			redirect('/fail')
+		end
+		title = params["title"].capitalize
 		text = params["text"]
 		dbcooper = SQLite3::Database.new("db/forum.sqlite")
-		userid = dbcooper.execute("SELECT id FROM users WHERE username = '#{username}'").join
+		userid = dbcooper.execute("SELECT id FROM users WHERE username = ?", username).join
 		all_titles = dbcooper.execute("SELECT title FROM list")
-		p all_titles[0][0]
-		p title
 		i = 0
 		while i < all_titles.size
 			if title == all_titles[i][i]
@@ -82,19 +81,41 @@ require 'uri'
 		slim(:reposti)
 	end
 
+	get('/fail') do
+		slim(:fail)
+	end
 
 
 	get('/logged_in/:title') do
 		username = session[:user]
 		title = params[:title]
 		dbcooper = SQLite3::Database.new("db/forum.sqlite")
-		userid = dbcooper.execute("SELECT id FROM users WHERE username = '#{username}'").join
-		poster_id = dbcooper.execute("SELECT userid FROM list WHERE title = '#{title}'").join
-		poster_name = dbcooper.execute("SELECT username FROM users WHERE id='#{poster_id}'").join
-		info = dbcooper.execute("SELECT text FROM list WHERE userid = '#{userid}'").join
-		info_id = dbcooper.execute("SELECT id FROM list WHERE userid = '#{userid}'").join
-		slim(:post, locals:{ info:info, info_id:info_id, userid:userid, poster_name:poster_name})
+		list_all = dbcooper.execute("SELECT * FROM list")
+		users_all = dbcooper.execute("SELECT * FROM users")
+		comments_all = dbcooper.execute("SELECT * FROM comments") 
+		post_id = dbcooper.execute("SELECT id FROM list WHERE title=?", title)
+		session[:post_id] = post_id
+		if comments_all[0][1] == nil
+			slim(:post, locals:{ list_all: list_all, user_all: users_all, post_id: post_id})
+		else
+			poster_name = dbcooper.execute("SELECT username FROM users WHERE id=?", comments_all[post_id[0][0].to_i - 1][2])
+			slim(:post, locals:{ list_all: list_all, user_all: users_all, comments_all:comments_all, post_id: post_id, poster_name:poster_name})
+		end
 	end
+
+	post('/comment') do
+		title = params[:title]
+		username = session[:user]
+		comment = params["comment"]
+		post_id = session[:post_id]
+		dbcooper = SQLite3::Database.new("db/forum.sqlite")
+		list_all = dbcooper.execute("SELECT * FROM list")
+		users_all = dbcooper.execute("SELECT * FROM users")
+		poster_id = dbcooper.execute("SELECT id FROM users WHERE username=?", username)
+		dbcooper.execute("INSERT INTO comments ('comment', 'poster_id', 'post_id') VALUES (?,?,?)", [comment, poster_id, post_id])
+		slim(:post, locals:{ list_all: list_all, user_all: users_all, post_id: post_id})
+	end
+
 
 
 

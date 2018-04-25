@@ -3,10 +3,20 @@ div class="container"
             div class="header_row"
                 img src="/img/account-circle.svg" class="profile_icon"
                 div class="header_box"
-                    p NTI Johanneberg
+                    a.header_title href="/" NTI Johanneberg
                 button class="create" Make a post
                 form action="/logout" method="POST" 
                     input.Login type="submit" value="Logout"
-        p = poster_name
-        p = session[:title][0][0]
-        P = info[0]
+        .content
+            - x = post_id[0][0] -1
+            h3.center = list_all[x][1]
+            div.posted
+                p.text = list_all[x][2]
+            - comments_all.each do |comment|    
+                 div.comment
+                    p.text = comments_all[x][comment[0]]
+                    p.text = poster_name[0][comment[0]-1]
+            form.comments action="/comment" method="POST"
+                input.comment_box type="text" name="comment" placeholder="Comment.."
+                input.comment_button type="submit" value="Post comment"
+
