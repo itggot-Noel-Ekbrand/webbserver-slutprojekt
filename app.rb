@@ -1,10 +1,12 @@
 require 'sinatra'
-class App < Sinatra::Base
 enable :sessions
 require 'open-uri'
 require 'json'
 require 'addressable'
 require 'uri'
+require 'sqlite3'
+require 'bcrypt'
+require 'slim'
 
 	get ('/') do
 		slim(:index)
@@ -126,4 +128,4 @@ require 'uri'
 	end	
 
 
-end           
+         
