@@ -164,7 +164,19 @@ html, body {
 .comments {
     display: flex;
     flex-direction: column;
+    height: 100vh;
+    z-index: 10;
+    margin:20px;
+}
+
+
+.comment {
+    margin-top: 40px;
+    border: 1px solid black;
+    width: 50vw;
+    align-self: center;
     height: 100%;
+    margin:20px;
 }
 
 .comment_button {
@@ -173,14 +185,17 @@ html, body {
     background-color: #98CEF8;
     border:none; 
     align-self: center;
+    margin:20px;
+    z-index: 10;
 }
 
 
 .comment_box {
     width: 60vw;
-    height: 30vh;
+    height: 50vh;
     padding:20px;
     margin-top: 20px;
     align-self: center;
+    z-index: 10;
 }
 

@@ -1,4 +1,5 @@
 require 'sinatra'
+class App < Sinatra::Base
 enable :sessions
 require 'open-uri'
 require 'json'
@@ -53,7 +54,7 @@ require 'slim'
 		users_all = dbcooper.execute("SELECT * FROM users")
 		title = dbcooper.execute("SELECT title FROM list").join
 		session[:title] = title
-		slim(:logged_in, locals:{ list_all: list_all, user_all: users_all})
+		slim(:logged_in, locals:{ list_all: list_all, users_all: users_all})
 	end
 
 	post('/create') do
@@ -98,10 +99,10 @@ require 'slim'
 		post_id = dbcooper.execute("SELECT id FROM list WHERE title=?", title)
 		session[:post_id] = post_id
 		if comments_all[0][1] == nil
-			slim(:post, locals:{ list_all: list_all, user_all: users_all, post_id: post_id})
+			slim(:post, locals:{ list_all: list_all, users_all: users_all, post_id: post_id})
 		else
-			poster_name = dbcooper.execute("SELECT username FROM users WHERE id=?", comments_all[post_id[0][0].to_i - 1][2])
-			slim(:post, locals:{ list_all: list_all, user_all: users_all, comments_all:comments_all, post_id: post_id, poster_name:poster_name})
+			poster_id = dbcooper.execute("SELECT id FROM users WHERE username=?", username)
+			slim(:post, locals:{ list_all: list_all, users_all: users_all, comments_all:comments_all, post_id: post_id, poster_id:poster_id})
 		end
 	end
 
@@ -109,17 +110,19 @@ require 'slim'
 		title = params[:title]
 		username = session[:user]
 		comment = params["comment"]
+		if comment[0] == nil
+			redirect('/fail')
+		else
 		post_id = session[:post_id]
 		dbcooper = SQLite3::Database.new("db/forum.sqlite")
 		list_all = dbcooper.execute("SELECT * FROM list")
 		users_all = dbcooper.execute("SELECT * FROM users")
+		comments_all = dbcooper.execute("SELECT * FROM comments") 
 		poster_id = dbcooper.execute("SELECT id FROM users WHERE username=?", username)
 		dbcooper.execute("INSERT INTO comments ('comment', 'poster_id', 'post_id') VALUES (?,?,?)", [comment, poster_id, post_id])
-		slim(:post, locals:{ list_all: list_all, user_all: users_all, post_id: post_id})
+		slim(:post, locals:{ list_all: list_all, users_all: users_all, comments_all:comments_all, post_id: post_id, poster_id:poster_id})
+		end
 	end
-
-
-
 
 
 	post('/logout') do
@@ -127,5 +130,5 @@ require 'slim'
 		redirect('/')
 	end	
 
-
+end
          
