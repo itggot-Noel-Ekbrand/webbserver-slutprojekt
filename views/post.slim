@@ -3,19 +3,27 @@ div class="container"
             div class="header_row"
                 img src="/img/account-circle.svg" class="profile_icon"
                 div class="header_box"
-                    a.header_title href="/" NTI Johanneberg
+                    a.header_title href="/logged_in/" NTI Johanneberg
                 button class="create" Make a post
                 form action="/logout" method="POST" 
                     input.Login type="submit" value="Logout"
         .content
-            - x = post_id[0][0] -1
-            h3.center = list_all[x][1]
-            div.posted
-                p.text = list_all[x][2]
-            form.comments action="/comment" method="POST"
-                input.comment_box type="text" name="comment" placeholder="Comment.."
-                input.comment_button type="submit" value="Post comment"
-            - comments_all.each do |comment|
+            - x = post_id[0][0]
+            - list_all.each do |post_inf|
+                -if post_inf[0] == x
+                    h3.center = post_inf[1]
+                    div.posted
+                        p.text = post_inf[2]
+                    form.comments action="/comment" method="POST"
+                        textarea.comment_box type="text" name="comment"
+                        input type="hidden" value="#{x}" name="post_id"
+                        input type="hidden" value="#{post_inf[1]}" name="title"
+                        input.comment_button type="submit"
+                    - comments.each do |comment|
+                        div.comment
+                            p = comment[0]
+            
+            //- comments_all.each do |comment|
                 div.comment
                     -p comment[0][0]
                     - if comment[0][0] == list_all[0][0]

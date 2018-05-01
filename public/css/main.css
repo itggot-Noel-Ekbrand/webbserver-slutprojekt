@@ -1,5 +1,4 @@
 html, body { 
-    height: 100%;
     margin:0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -9,8 +8,6 @@ html, body {
     display: flex;
     flex-direction: column;
     margin: 0;
-    height: 100vh;
-    width:100vw;
 }
 
 #post {
@@ -88,7 +85,7 @@ html, body {
 }
 
 .header {
-    height: 15%;
+    height: 10vh;
     width: 100%;
     background-color:#96A5A8;
     margin-bottom: 20px;
@@ -146,15 +143,12 @@ html, body {
     color: #E6E2DD;
 }
 
-.center{
-    align-self: center;
-}
+
 
 .posted {
-    height: 40vh;
-    width: 80vw;
+    height: 30vh;
+    width: 50vw;
     border: 1px solid black;
-    align-self: center;
 }
 
 .text {
@@ -164,8 +158,7 @@ html, body {
 .comments {
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    z-index: 10;
+    height: 200px;
     margin:20px;
 }
 
@@ -174,8 +167,7 @@ html, body {
     margin-top: 40px;
     border: 1px solid black;
     width: 50vw;
-    align-self: center;
-    height: 100%;
+    height:100px;
     margin:20px;
 }
 
@@ -184,18 +176,12 @@ html, body {
     width: 8vw;
     background-color: #98CEF8;
     border:none; 
-    align-self: center;
     margin:20px;
-    z-index: 10;
 }
 
 
 .comment_box {
-    width: 60vw;
-    height: 50vh;
-    padding:20px;
-    margin-top: 20px;
-    align-self: center;
-    z-index: 10;
+    width: 500px;
+    height: 100px;
 }
 
