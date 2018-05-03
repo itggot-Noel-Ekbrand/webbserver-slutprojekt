@@ -1,5 +1,4 @@
 require 'sinatra'
-enable :sessions
 require 'open-uri'
 require 'json'
 require 'addressable'
@@ -7,6 +6,9 @@ require 'uri'
 require 'sqlite3'
 require 'bcrypt'
 require 'slim'
+
+class App < Sinatra::Base
+	enable :sessions
 
 	get ('/') do
 		slim(:index)
@@ -28,7 +30,7 @@ require 'slim'
 			end
 		end
 		dbcooper.execute("INSERT INTO users('username','password') VALUES(?,?)", [username,cryptpassword.to_s])
-		redirect('/logged_in/')
+		redirect('/')
 	end
 
 
@@ -42,19 +44,21 @@ require 'slim'
 			session[:user] = username
 			redirect('/logged_in/')
 		else
-		redirect('/fail')
+			redirect('/fail')
 		end
 	end
 
 	get('/logged_in/') do
 		if session[:user]
-		username = session[:user]
-		dbcooper = SQLite3::Database.new("db/forum.sqlite")
-		list_all = dbcooper.execute("SELECT * FROM list")
-		users_all = dbcooper.execute("SELECT * FROM users")
-		title = dbcooper.execute("SELECT title FROM list").join
-		session[:title] = title
-		slim(:logged_in, locals:{ list_all: list_all, users_all: users_all})
+			username = session[:user]
+			dbcooper = SQLite3::Database.new("db/forum.sqlite")
+			list_all = dbcooper.execute("SELECT * FROM list")
+			users_all = dbcooper.execute("SELECT * FROM users")
+			title = dbcooper.execute("SELECT title FROM list").join
+			session[:title] = title
+			user_id = dbcooper.execute("SELECT id FROM users WHERE username=?", username).join
+			session[:user_id] = user_id
+			slim(:logged_in, locals:{ list_all: list_all, users_all: users_all})
 		else
 			redirect('/fail')
 		end
@@ -62,7 +66,7 @@ require 'slim'
 
 	post('/create') do
 		if session[:user]
-		username = session[:user]
+			username = session[:user]
 		if username == nil
 			redirect('/fail')
 		end
@@ -119,32 +123,53 @@ require 'slim'
 
 	post('/comment') do
 		if session[:user]
-		title = params[:title]
-		username = session[:user]
-		comment = params["comment"]
-		if comment[0] == nil
-			redirect('/fail')
+			title = params[:title]
+			username = session[:user]
+			comment = params["comment"]
+			if comment[0] == nil
+				redirect('/fail')
+			else
+				post_id = params[:post_id]
+				dbcooper = SQLite3::Database.new("db/forum.sqlite")
+				list_all = dbcooper.execute("SELECT * FROM list")
+				users_all = dbcooper.execute("SELECT * FROM users")
+				comments_all = dbcooper.execute("SELECT * FROM comments") 
+				poster_id = dbcooper.execute("SELECT id FROM users WHERE username=?", username)
+				dbcooper.execute("INSERT INTO comments ('comment', 'poster_id', 'post_id') VALUES (?,?,?)", [comment, poster_id, post_id])
+				redirect('/logged_in/'+title)
+			end	
 		else
-		post_id = params[:post_id]
-		dbcooper = SQLite3::Database.new("db/forum.sqlite")
-		list_all = dbcooper.execute("SELECT * FROM list")
-		users_all = dbcooper.execute("SELECT * FROM users")
-		comments_all = dbcooper.execute("SELECT * FROM comments") 
-		poster_id = dbcooper.execute("SELECT id FROM users WHERE username=?", username)
-		p post_id
-		p title
-		dbcooper.execute("INSERT INTO comments ('comment', 'poster_id', 'post_id') VALUES (?,?,?)", [comment, poster_id, post_id])
-		redirect('/logged_in/'+title)
+			redirect('/fail')
 		end
+	end
+
+	get('/friend_list/') do
+		dbcooper = SQLite3::Database.new("db/forum.sqlite")
+		dbcooper.results_as_hash = true
+		friends_with = dbcooper.execute("SELECT * FROM relations WHERE user_1 = ? OR user_2 = ?", [session[:user_id], session[:user_id]])
+		if session[:user]
+			friends = []
+			friends_with.each do |pair|
+				pair.delete_if {|k,v| v.to_i == session[:user_id].to_i}
+				friend_id = pair.first[1]
+				p friend_id
+				friend_name = dbcooper.execute("SELECT username FROM users WHERE id=?", [friend_id]).first["username"]
+				p friend_name
+				friends << {id:friend_id, name:friend_name}
+			end
+			p friends
+			slim(:friend_list, locals:{friends: friends})
 		else
 			redirect('/fail')
 		end
 	end
 
 
+
+
+
 	post('/logout') do
 		session[:user] = nil
 		redirect('/')
 	end	
-
-         
+end
