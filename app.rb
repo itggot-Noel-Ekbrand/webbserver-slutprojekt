@@ -6,9 +6,11 @@ require 'uri'
 require 'sqlite3'
 require 'bcrypt'
 require 'slim'
+require_relative 'modules.rb'
 
-class App < Sinatra::Base
+#class App < Sinatra::Base
 	enable :sessions
+	include Users
 
 	get ('/') do
 		slim(:index)
@@ -58,7 +60,7 @@ class App < Sinatra::Base
 			session[:title] = title
 			user_id = dbcooper.execute("SELECT id FROM users WHERE username=?", username).join
 			session[:user_id] = user_id
-			slim(:logged_in, locals:{ list_all: list_all, users_all: users_all})
+			slim(:logged_in, locals:{ list_all: list_all, users_all: users_all, username:username})
 		else
 			redirect('/fail')
 		end
@@ -113,8 +115,9 @@ class App < Sinatra::Base
 			slim(:post, locals:{ list_all: list_all, users_all: users_all, post_id: post_id})
 		else
 			comments = dbcooper.execute("SELECT comment FROM comments WHERE post_id=?", post_id)
+			commenter_id = dbcooper.execute("SELECT poster_id FROM comments WHERE post_id=?", post_id)
 			poster_id = dbcooper.execute("SELECT id FROM users WHERE username=?", username)
-			slim(:post, locals:{ list_all: list_all, users_all: users_all, comments_all:comments_all, post_id: post_id, poster_id:poster_id, comments:comments})
+			slim(:post, locals:{ list_all: list_all, users_all: users_all, comments_all:comments_all, post_id: post_id, poster_id:poster_id, comments:comments, commenter_id:commenter_id, username:username})
 		end
 		else
 			redirect('/fail')
@@ -144,26 +147,47 @@ class App < Sinatra::Base
 	end
 
 	get('/friend_list/') do
-		dbcooper = SQLite3::Database.new("db/forum.sqlite")
-		dbcooper.results_as_hash = true
-		friends_with = dbcooper.execute("SELECT * FROM relations WHERE user_1 = ? OR user_2 = ?", [session[:user_id], session[:user_id]])
+		username = session[:user]
 		if session[:user]
-			friends = []
-			friends_with.each do |pair|
-				pair.delete_if {|k,v| v.to_i == session[:user_id].to_i}
-				friend_id = pair.first[1]
-				p friend_id
-				friend_name = dbcooper.execute("SELECT username FROM users WHERE id=?", [friend_id]).first["username"]
-				p friend_name
-				friends << {id:friend_id, name:friend_name}
-			end
-			p friends
-			slim(:friend_list, locals:{friends: friends})
+			friends = Users::get_friends(session[:user_id])
+			new_friend = 1
+			session[:friends] = friends
+			slim(:friend_list, locals:{friends: friends, new_friend:new_friend, username:username})
 		else
 			redirect('/fail')
 		end
 	end
 
+	post('/search') do
+		friends = session[:friends]
+		username = params["username"]
+		if username == session[:user]
+			redirect('/fail')
+		else
+		dbcooper = SQLite3::Database.new("db/forum.sqlite")
+		new_friend = dbcooper.execute("SELECT username FROM users WHERE username =?",[username])
+		username = session[:user]
+		slim(:friend_list, locals:{friends:friends, new_friend:new_friend, username:username})
+		end
+	end
+
+	post('/add') do
+		added_friend = params[:added_friend]
+		friends = Users::get_friends(session[:user_id])
+		friends.each do |friend|
+					p added_friend
+					p friend[:name]	
+					if added_friend.to_s == friend[:name].to_s
+						redirect('/fail')
+						return
+					end
+				end
+		dbcooper = SQLite3::Database.new("db/forum.sqlite")
+		added_friend_id = dbcooper.execute("SELECT id FROM users WHERE username =?",[added_friend])
+		dbcooper.execute("INSERT INTO relations ('user_1', 'user_2') VALUES (?,?)", [session[:user_id], added_friend_id])
+		new_friend = 1
+		redirect('/friend_list/')
+	end
 
 
 
@@ -172,4 +196,4 @@ class App < Sinatra::Base
 		session[:user] = nil
 		redirect('/')
 	end	
-end
+#end

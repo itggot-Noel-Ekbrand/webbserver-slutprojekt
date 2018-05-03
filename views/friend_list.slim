@@ -1,12 +1,29 @@
 div class="container"
         div class="header"
             div class="header_row"
-                img src="/img/account-circle.svg" class="profile_icon"
+                button  class="profile_icon" class="list"
+                    a href="/friend_list/" Friend List
                 div class="header_box"
                     a.header_title href="/logged_in/" NTI Johanneberg
+                p Logged in as #{username}
                 form action="/logout" method="POST" 
                     input.Login type="submit" value="Logout"
-        
+        p.center You are friends with
         - friends.each do |friend|
-            p = friend[:name]
+            p.center =  friend[:name]
+        -if new_friend == 1
+            p.center Search for friends
+            form.center action="/search" method="POST"
+                input type="text" name="username"
+                input type="submit" value="Search"
+        -elsif new_friend.empty?
+            p.center That person does not exist.
+            a.center href="/friend_list/" Try again
+        -else
+            div.search_center 
+                p.center = new_friend[0][0]
+                form.center action="add" method="POST"
+                    input type="hidden" value="#{new_friend[0][0]}" name="added_friend"
+                    input type="submit" value="Add as friend"
+            
 

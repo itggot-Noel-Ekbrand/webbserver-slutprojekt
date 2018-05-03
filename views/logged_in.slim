@@ -1,10 +1,11 @@
 div class="container"
         div class="header"
             div class="header_row"
-                a href="/friend_list/"
-                    img src="/img/account-circle.svg" class="profile_icon" 
+                button  class="profile_icon" class="list"
+                    a href="/friend_list/" Friend List
                 div class="header_box"
                     a.header_title href="/logged_in/" NTI Johanneberg
+                p Logged in as #{username}
                 button class="create" Make a post
                 form action="/logout" method="POST" 
                     input.Login type="submit" value="Logout"
@@ -18,6 +19,10 @@ div class="container"
                 .title
                     a href="/logged_in/#{content[1]}"
                         h3 = content[1].capitalize
+                - users_all.each_with_index do |creator|
+                    - if creator[0] == content[3]
+                        p = creator[1]
+                                
                 
 
            
