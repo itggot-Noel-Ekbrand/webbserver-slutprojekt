@@ -189,9 +189,6 @@ require_relative 'modules.rb'
 		redirect('/friend_list/')
 	end
 
-
-
-
 	post('/logout') do
 		session[:user] = nil
 		redirect('/')
